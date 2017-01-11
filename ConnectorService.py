@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Clase para el conector remoto
+# Archivo para el conector remoto
 # (c) Daniel Cordova A. <danesc87@gmail.com>, GPL v2
 import os
 import sys
@@ -78,11 +78,6 @@ def connectorService(host, chosenHost, script_to_execute, execTime):
 					else:
 						print (line_buffer)
 						line_buffer   = ''
-			# except socket.timeout:
-			# 	# print(str(c))
-			# 	print ("Se acbo el tiempoooooooooooo!!!!!!!!!!!!!!!!!")
-			# 	break
-			# 	exitFunction()
 			except paramiko.SSHException as e:
 				print ('Errooooooorrrrrrrr!!!!!',str(e))
 				exitFunction()
@@ -99,6 +94,5 @@ def connectorService(host, chosenHost, script_to_execute, execTime):
 		sshConnection.close()
 
 def exitFunction():
-	# os.system('clear')
 	os.system('stty echo')
 	exit()

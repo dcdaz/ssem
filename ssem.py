@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-# Archivo para conector con la base de datos sqlite3
+# Archivo de inicio del programa SSEM que permite la ejecución de scripts de
+# manera remota en servidores ssh
 # (c) Daniel Córdova A. <danesc87@gmail.com>, GPL v2
 
 import argparse
@@ -13,10 +14,10 @@ args = None
 
 def argumentsForParse():
     parser = argparse.ArgumentParser(description='Arguments for SSEM')
-    parser.add_argument('--remotehost','-r', nargs='*', help='Connetion to remote host')
+    parser.add_argument('--remotehost','-r', nargs='*', help='Connection to remote host')
     parser.add_argument('--remoteexecute','-x',nargs='*', help='Execute command on remote host')
     parser.add_argument('--addscript','-a',nargs=2, help='Add script to data base')
-    parser.add_argument('--deletescript','-d', help='Delete script to data base')
+    parser.add_argument('--deletescript','-d', help='Delete script on data base')
     return parser.parse_args()
 
 def executionTime(argsObject, parameterNumber):
@@ -46,3 +47,5 @@ elif args.addscript:
     DBConnection.insert_on_DB(args.addscript[0], args.addscript[1])
 elif args.deletescript:
     DBConnection.delete_from_DB(args.deletescript)
+else:
+    print('SSEM necesita argumentos, mira ssem -h')
