@@ -31,28 +31,26 @@ def connectorService(host, chosenHost, script_to_execute, execTime):
 				sshConnection = paramiko.SSHClient()
 				sshConnection.load_system_host_keys()
 				sshConnection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-				try:
+				connectionPort = 22
+				if 'port' in host:
 					connectionPort = int(host['port'])
-				except:
-					connectionPort = 22
 				try:
 					sshConnection.connect(host['hostname'], port=connectionPort, username=host['user'])
 				except:
 					print ('No se encuentra tu llave en el servidor ' + chosenHost)
-					# serverPassword = input ('Ingrese contraseña del servidor ')
 					serverPassword = getpass.getpass('Ingrese contraseña del servidor ')
 					try:
 						sshConnection.connect(host['hostname'], port=connectionPort, username=host['user'], password=serverPassword)
-					except paramiko.AuthenticationException as error:
-						print(error)
-						break
+					except paramiko.AuthenticationException as e:
+						print(e)
+						continue
 			except:
 				print ('No se puede conectar al servidor ' + chosenHost + ' esperando para reconectar')
 				i += 1
 				time.sleep(2)
 			if i == 30:
 				print ('Imposible conectar al servidor ' + chosenHost)
-				sys.exit(1)
+				exitFunction()
 			transport = sshConnection.get_transport()
 			channel = transport.open_session()
 			channel.get_pty()
@@ -79,7 +77,7 @@ def connectorService(host, chosenHost, script_to_execute, execTime):
 						print (line_buffer)
 						line_buffer   = ''
 			except paramiko.SSHException as e:
-				print ('Errooooooorrrrrrrr!!!!!',str(e))
+				print ('Error en ejecución remota', str(e))
 				exitFunction()
 				break
 			retcode = channel.recv_exit_status()
@@ -89,6 +87,7 @@ def connectorService(host, chosenHost, script_to_execute, execTime):
 				print (buf, retcode)
 				break
 	except:
+		sshConnection.close()
 		exitFunction()
 	finally:
 		sshConnection.close()
