@@ -2,7 +2,7 @@ Server Script Executor Monitor a.k.a **SSEM** it's an app that allows to connect
 **SSEM** uses 4 different parameters to work.
 
 * First Parameter **--remotehost or -r**
-    * This parameter allows to connect to ssh server, only if that server was previously saved on your ~/.ssh/config.
+    * This parameter allows to connect to shh server whether it's on your ~/.ssh/config or not.
     * This parameter receives one or two argumets, first argument is the alias of your ssh server, the second argument is optional and it means execution time in seconds.
     * Examples:
       * python3 ssem.py -r server

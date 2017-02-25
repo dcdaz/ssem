@@ -67,6 +67,9 @@ class ServerScriptExecutorMonitor(object):
         else:
             print('SSEM necesita argumentos, mira ssem -h')
 
+def main():
+    ssem = ServerScriptExecutorMonitor()
+    ssem.start_functions()
 
-ssem = ServerScriptExecutorMonitor()
-ssem.start_functions()
+if __name__ == '__main__':
+    main()
