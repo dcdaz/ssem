@@ -44,28 +44,43 @@ class ServerScriptExecutorMonitor(object):
         if self.arguments.remotehost:
             self.print_list_of_scripts(db_connection.DataBaseConnector().show_all_scripts())
             self.exec_time = self.execution_time(self.arguments.remotehost, 2)
-            self.script_id = input('Seleccione el ID del script a ejecutar: ')
-            self.script_to_execute = db_connection.DataBaseConnector().select_script(self.script_id)[0][0]
+            while True:
+                    self.script_id = input('Seleccione el ID del script a ejecutar: ')
+                    if(self.check_if_is_number()):
+                        try:
+                            self.script_to_execute = db_connection.DataBaseConnector().select_script(self.script_id)[0][0]
+                            break
+                        except IndexError:
+                            print('El valor: "' + str(self.script_id) + '" no se encuentra en la base de datos')
             self.chosen_host = self.arguments.remotehost[0]
             opened_connection = new_connection.create_connection(self.chosen_host)
             command = ExecutorOnServer(opened_connection)
-            command.execute_command_on_server(self.script_to_execute, self.exec_time)
+            command.send_command(self.script_to_execute, self.exec_time)
         elif self.arguments.remoteexecute:
             self.execTime = self.execution_time(self.arguments.remoteexecute, 3)
             self.script_to_execute = self.arguments.remoteexecute[1]
             self.chosen_host = self.arguments.remoteexecute[0]
             opened_connection = new_connection.create_connection(self.chosen_host)
             command = ExecutorOnServer(opened_connection)
-            command.execute_command_on_server(self.script_to_execute, self.exec_time)
+            command.send_command(self.script_to_execute, self.exec_time)
         elif self.arguments.addscript:
             script_itself = self.arguments.addscript[0]
             script_description = self.arguments.addscript[1]
             db_connection.DataBaseConnector().insert_on_database(script_itself, script_description)
         elif self.arguments.deletescript:
             self.script_id = self.arguments.deletescript
-            db_connection.DataBaseConnector().delete_from_database(self.script_id)
+            if(self.check_if_is_number()):
+                db_connection.DataBaseConnector().delete_from_database(self.script_id)
         else:
             print('SSEM necesita argumentos, mira ssem -h')
+
+    def check_if_is_number(self):
+        try:
+            self.script_id = int(self.script_id)
+            return True
+        except ValueError:
+            print('El valor: "' + self.script_id + '" no es un número')
+            return False
 
 def main():
     ssem = ServerScriptExecutorMonitor()

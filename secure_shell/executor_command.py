@@ -10,7 +10,7 @@ class ExecutorOnServer(object):
     def __init__(self, opened_connection):
         self.connection_factory = opened_connection
 
-    def execute_command_on_server(self, script_to_execute, exec_time):
+    def send_command(self, script_to_execute, exec_time):
         newline = '\r'
         line_buffer = ''
         channel_buffer = ''
