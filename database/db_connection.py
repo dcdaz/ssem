@@ -3,12 +3,13 @@
 # (c) Daniel Córdova A. <danesc87@gmail.com>, GPL v2
 
 import sqlite3
+from database import db_file
 
 class DataBaseConnector(object):
     '''Class that allows connection to sqlite3 database and do inserts, show all scripts, select some script by id
     and delete some script by id'''
     def __init__(self):
-        self.connection_to_database = sqlite3.connect('ssemDB')
+        self.connection_to_database = sqlite3.connect(db_file)
         self.connector_cursor = self.connection_to_database.cursor()
 
     def close_connection_to_database(self):
@@ -18,7 +19,10 @@ class DataBaseConnector(object):
     def insert_on_database(self, script_itself, script_description):
         script_id = None
         script_id = self.connector_cursor.execute('SELECT MAX(ID) FROM SCRIPTS_TABLE')
-        script_id = int(script_id.fetchone()[0]) + 1
+        try:
+            script_id = int(script_id.fetchone()[0]) + 1
+        except TypeError:
+            script_id = 1
         insert_on_database = self.connector_cursor.execute('INSERT INTO SCRIPTS_TABLE (ID, DESCRIPTION, SCRIPT) VALUES (?,?,?)', (int(script_id), script_description, script_itself))
         self.connection_to_database.commit()
         self.close_connection_to_database()
@@ -40,3 +44,8 @@ class DataBaseConnector(object):
         self.connection_to_database.commit()
         self.close_connection_to_database()
 
+    def create_database(self):
+        self.connector_cursor.execute('CREATE TABLE SCRIPTS_TABLE(ID INTEGER NOT NULL,DESCRIPTION TEXT NOT NULL,'
+                                      'SCRIPT TEXT NOT NULL, PRIMARY KEY (ID))')
+        self.connection_to_database.commit()
+        self.close_connection_to_database()

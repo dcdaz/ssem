@@ -3,10 +3,10 @@
 # (c) Daniel Córdova A. <danesc87@gmail.com>, GPL v2
 
 import argparse
-
-from database import db_connection
+from database import db_connection, exist_db_file
 from secure_shell.connection_factory import ConnectionFactory
 from secure_shell.executor_command import ExecutorOnServer
+
 
 class ServerScriptExecutorMonitor(object):
     '''Class that receives arguments from shell and do tasks with sqlite3 database or execute some command on ssh
@@ -82,8 +82,13 @@ class ServerScriptExecutorMonitor(object):
             print('El valor: "' + self.script_id + '" no es un número')
             return False
 
+    def new_database(self):
+        db_connection.DataBaseConnector().create_database()
+
 def main():
     ssem = ServerScriptExecutorMonitor()
+    if not exist_db_file:
+        ssem.new_database()
     ssem.start_functions()
 
 if __name__ == '__main__':

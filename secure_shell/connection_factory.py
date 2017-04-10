@@ -5,6 +5,7 @@ import os, pwd
 import time
 import paramiko
 import getpass
+from secure_shell import ssh_file
 
 class ConnectionFactory(object):
     '''Factory Class that returns an opened connection'''
@@ -19,9 +20,8 @@ class ServerHost(ConnectionFactory):
     def __init__(self, chosen_host):
         self.this_host = chosen_host
         self.hostname = None
-        config_file = os.path.join(os.getenv('HOME'), '.ssh/config')
         self.ssh_config = paramiko.SSHConfig()
-        self.ssh_config.parse(open(config_file, 'r'))
+        self.ssh_config.parse(open(ssh_file, 'r'))
         self.parameters_for_host(chosen_host)
         self.host_ip = self.hostname.get('hostname', 'localhost')
         self.port = self.hostname.get('port', 22)
