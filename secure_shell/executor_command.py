@@ -4,7 +4,7 @@
 
 import os
 import paramiko
-from secure_shell import timeout
+from secure_shell import time_file
 
 class ExecutorOnServer(object):
     '''Class that send some comand to remote server'''
@@ -15,7 +15,8 @@ class ExecutorOnServer(object):
         newline = '\r'
         line_buffer = ''
         channel_buffer = ''
-        if exec_time != None or exec_time != 0:
+        timeout = int(time_file)
+        if exec_time != 0:
             timeout = int(exec_time)
         self.connection_factory.channel.settimeout(timeout)
         try:
